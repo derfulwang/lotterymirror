@@ -13,7 +13,8 @@ def get_numbers(start_dt, end_dt):
     startTime=19010690&endTime=19010729
     '''
     ty11x5 = 'http://tubiao.zhcw.com/tubiao//tianJing/11x5//11x5Jsp/11x5static.jsp?url=11x5.jsp&startTime={0}&endTime={1}'
-    r =requests.get(ty11x5.format(start_dt,end_dt))
+    print(ty11x5.format(start_dt,end_dt))
+    r = requests.get(ty11x5.format(start_dt,end_dt))
     soup = BeautifulSoup(r.text,'lxml')
     tables = soup.findAll('table')
     tab = tables[0]
@@ -26,3 +27,13 @@ def get_numbers(start_dt, end_dt):
                 rec[cur_issue].append(td.text.strip())
     return rec
 
+def fetch_history(
+    start_dt = datetime.datetime(2019,1,6),
+    end_dt = datetime.datetime(2019,1,7)
+    ):
+    cur_dt = start_dt
+    all_res = {}
+    while cur_dt <= end_dt:
+        all_res.update(get_numbers(cur_dt.strftime("%y%m%d01"), cur_dt.strftime("%y%m%d90")))
+        cur_dt += datetime.timedelta(days=1)
+    return all_res
